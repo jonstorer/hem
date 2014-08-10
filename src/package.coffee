@@ -119,14 +119,14 @@ class Package
     console.log "Building '#{@name}' target: #{@target}"
     source = @compile(minify)
     fs.writeFileSync(@target, source) if source
-    
+
   watch: ->
     console.log "Watching '#{@name}'"
     watchOptions = { persistent: true, interval: 1000, ignoreDotFiles: true }
     for dir in (path.dirname(lib) for lib in @libs).concat @paths
       continue unless fs.existsSync(dir)
       require('watch').watchTree dir, watchOptions, (file, curr, prev) =>
-        @build() if curr and (curr.nlink is 0 or +curr.mtime isnt +prev?.mtime)
+        @build(false) if curr and (curr.nlink is 0 or +curr.mtime isnt +prev?.mtime)
 
   middleware: (debug) =>
     (req, res, next) =>
